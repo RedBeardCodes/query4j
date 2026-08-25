@@ -160,6 +160,7 @@ These are strictly optional and are provided solely for convenience.
 | Auditable | Adds `Instant updatedAt` and `Instant createdAt` |
 | Identifiable | Adds `UUID uuid` |
 | Sequenceable | Adds `Long id` |
+| Activable | Adds `boolean isActive` |
 
 Use these with your records:
 
