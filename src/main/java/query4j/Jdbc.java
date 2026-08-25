@@ -22,7 +22,7 @@ public class Jdbc {
 		this.ds = ds;
 	}
 
-	public <T> List<T> query(String sql, RowMapper<T> mapper, Object... params) {
+	public <T> List<T> query(String sql, RowMapper<T> mapper, Object... params) throws QueryException {
 		try (Connection conn = ds.getConnection();
 				PreparedStatement ps = prepareStatement(conn, sql, false, params)) {
 			try (ResultSet rs = ps.executeQuery()) {
@@ -36,7 +36,7 @@ public class Jdbc {
 		}
 	}
 
-	public int update(String sql, Object... params) {
+	public int update(String sql, Object... params) throws QueryException {
 		try (Connection conn = ds.getConnection();
 				PreparedStatement ps = prepareStatement(conn, sql, false, params)) {
 			return ps.executeUpdate();
@@ -45,7 +45,7 @@ public class Jdbc {
 		}
 	}
 
-	public <K> K insert(String sql, Class<K> keyType, Object... params) {
+	public <K> K insert(String sql, Class<K> keyType, Object... params) throws QueryException {
 		try (Connection conn = ds.getConnection();
 				PreparedStatement ps = prepareStatement(conn, sql, true, params)) {
 			bind(ps, params);
@@ -61,7 +61,7 @@ public class Jdbc {
 		}
 	}
 
-	public <T> Optional<T> queryOptional(String sql, RowMapper<T> mapper, Object... params) {
+	public <T> Optional<T> queryOptional(String sql, RowMapper<T> mapper, Object... params) throws QueryException {
 		try (Connection conn = ds.getConnection();
 				PreparedStatement ps = prepareStatement(conn, sql, false, params)) {
 			try (ResultSet rs = ps.executeQuery()) {
@@ -77,7 +77,7 @@ public class Jdbc {
 		}
 	}
 
-	public <T> T queryOne(String sql, RowMapper<T> mapper, Object... params) {
+	public <T> T queryOne(String sql, RowMapper<T> mapper, Object... params) throws QueryException {
 		try (Connection conn = ds.getConnection();
 				PreparedStatement ps = prepareStatement(conn, sql, false, params)) {
 			try (ResultSet rs = ps.executeQuery()) {
@@ -93,11 +93,11 @@ public class Jdbc {
 		}
 	}
 
-	public <T> T queryValue(String sql, Class<T> type, Object... params) {
+	public <T> T queryValue(String sql, Class<T> type, Object... params) throws QueryException {
 		return queryOne(sql, rs -> rs.getObject(1, type), params);
 	}
 
-	public int[] batchUpdate(String sql, List<Object[]> params) {
+	public int[] batchUpdate(String sql, List<Object[]> params) throws QueryException {
 		try (Connection conn = ds.getConnection();
 				PreparedStatement ps = prepareStatement(conn, sql, false, params)) {
 			for (Object[] row : params) {
